@@ -1,0 +1,1 @@
+- [Validated Replit config](replit-config.md) — `.replit` is protected and must be replaced through schema validation after editing a complete temporary file.
