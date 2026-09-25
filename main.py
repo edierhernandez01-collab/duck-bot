@@ -34,7 +34,14 @@ def generate_duck_email() -> str:
         headers={
             "Authorization": authorization_header(DUCK_TOKEN),
             "Accept": "application/json",
-            "User-Agent": "DuckEmailTelegramBot/1.0",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Origin": "https://duckduckgo.com",
+            "Referer": "https://duckduckgo.com/",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/131.0.0.0 Safari/537.36"
+            ),
         },
         timeout=REQUEST_TIMEOUT_SECONDS,
     )
