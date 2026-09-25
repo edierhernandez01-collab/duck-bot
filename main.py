@@ -21,12 +21,20 @@ DUCK_TOKEN = required_env("DUCK_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
+def authorization_header(token: str) -> str:
+    token = token.strip().strip("\"'")
+    if token.lower().startswith("bearer "):
+        token = token[7:].strip()
+    return f"Bearer {token}"
+
+
 def generate_duck_email() -> str:
     response = requests.post(
         DUCK_API_URL,
         headers={
-            "Authorization": f"Bearer {DUCK_TOKEN}",
+            "Authorization": authorization_header(DUCK_TOKEN),
             "Accept": "application/json",
+            "User-Agent": "DuckEmailTelegramBot/1.0",
         },
         timeout=REQUEST_TIMEOUT_SECONDS,
     )
@@ -54,6 +62,20 @@ def handle_start(message: telebot.types.Message) -> None:
 def handle_email(message: telebot.types.Message) -> None:
     try:
         email = generate_duck_email()
+    except requests.HTTPError as error:
+        if error.response is not None and error.response.status_code == 403:
+            logging.error("DuckDuckGo rejected DUCK_TOKEN with HTTP 403")
+            bot.reply_to(
+                message,
+                "DuckDuckGo rejected the DUCK_TOKEN. Re-copy the token from the "
+                "Authorization header after the word Bearer and update the Secret.",
+            )
+        else:
+            logging.exception("DuckDuckGo API request failed")
+            bot.reply_to(
+                message,
+                "I couldn't generate an email address right now. Please try again later.",
+            )
     except requests.RequestException:
         logging.exception("DuckDuckGo API request failed")
         bot.reply_to(
