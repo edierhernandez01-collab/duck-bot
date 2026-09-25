@@ -1,1 +1,2 @@
 - [Validated Replit config](replit-config.md) — `.replit` is protected and must be replaced through schema validation after editing a complete temporary file.
+- [DuckDuckGo email API](duckduckgo-email-api.md) — private-address requests may return 403 with bot-like headers; use browser-like request headers with the bearer token.
