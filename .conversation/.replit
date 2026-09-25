@@ -1,0 +1,6 @@
+modules = ["python-base-3.13"]
+entrypoint = "main.py"
+run = "python main.py"
+
+[nix]
+channel = "stable-25_05"
